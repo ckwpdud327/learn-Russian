@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import AlphabetLearning from './pages/AlphabetLearning';
 import BasicLearning from './pages/BasicLearning';
+import FrequentWordsLearning from './components/FrequentWordsLearning';
+import Navigation from './components/Navigation';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -22,12 +24,14 @@ const App: React.FC = () => (
   <Router>
     <AppWrapper>
       <Header />
+      <Navigation />
       <MainContent>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/alphabet" element={<AlphabetLearning />} />
           <Route path="/basic" element={<BasicLearning />} />
+          <Route path="/frequent-words" element={<FrequentWordsLearning />} />
         </Routes>
       </MainContent>
       <Footer />

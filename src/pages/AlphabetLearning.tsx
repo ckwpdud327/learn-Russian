@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
+
 
 const alphabets = [
   { char: 'А', romanization: 'A', sound: 'a', example: 'автобус (avtobus) - 버스', koreanEquivalent: '아' },
@@ -140,11 +137,23 @@ const AlphabetLearning: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [feedback, setFeedback] = useState('');
 
+  const generateQuizOptions = useCallback(() => {
+    const options = [alphabets[currentIndex].romanization];
+    while (options.length < 4) {
+      const randomIndex = Math.floor(Math.random() * alphabets.length);
+      const randomOption = alphabets[randomIndex].romanization;
+      if (!options.includes(randomOption)) {
+        options.push(randomOption);
+      }
+    }
+    setQuizOptions(options.sort(() => Math.random() - 0.5));
+  }, [currentIndex]);
+
   useEffect(() => {
     if (quizMode) {
       generateQuizOptions();
     }
-  }, [currentIndex, quizMode]);
+  }, [quizMode, generateQuizOptions]);
 
   const nextAlphabet = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % alphabets.length);
@@ -162,18 +171,6 @@ const AlphabetLearning: React.FC = () => {
     utterance.lang = 'ru-RU';
     utterance.rate = 0.8; // 속도를 약간 줄임
     window.speechSynthesis.speak(utterance);
-  };
-
-  const generateQuizOptions = () => {
-    const options = [alphabets[currentIndex].romanization];
-    while (options.length < 4) {
-      const randomIndex = Math.floor(Math.random() * alphabets.length);
-      const randomOption = alphabets[randomIndex].romanization;
-      if (!options.includes(randomOption)) {
-        options.push(randomOption);
-      }
-    }
-    setQuizOptions(options.sort(() => Math.random() - 0.5));
   };
 
   const checkAnswer = (answer: string) => {
